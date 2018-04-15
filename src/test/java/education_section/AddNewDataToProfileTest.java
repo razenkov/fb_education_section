@@ -90,7 +90,7 @@ public class AddNewDataToProfileTest extends WebDriverTestBase {
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(profilePage.experienceSection_loc)));
 
         //Getting all elements on page with employee position name to check added position has been saved
-        List<WebElement> listOfInfoTabs = driver.findElements(By.xpath("//*[@class='fsm fwn fcg']"));
+        List<WebElement> listOfInfoTabs = driver.findElements(By.xpath(profilePage.allExpBlocksOnPage));
         boolean addedPositionIsPresent = false;
         for (WebElement element : listOfInfoTabs) {
             if(element.getText().contains(profilePage.position)){

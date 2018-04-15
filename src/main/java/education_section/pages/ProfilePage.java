@@ -47,7 +47,7 @@ public class ProfilePage {
     public String positionDropDownArea_loc = "typeahead_list_u_17_c";
     public String city_loc = "//*[@title='Los Angeles, California']";
     public String shareDrop_loc = "//*[@aria-label='Shared with Public']";
-   // public String shareDrop_loc = "//*[@id='u_13_a']";
+    public String allExpBlocksOnPage = "//*[@class='fsm fwn fcg']";
 
 
     public String shareFilterMenu = "//*[@role='menuitemcheckbox']";
