@@ -1,0 +1,4 @@
+#WaitsForDriver
+wait.page=5
+wait.implicit=5
+wait.script=5
