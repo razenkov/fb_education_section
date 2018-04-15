@@ -1,5 +1,6 @@
 package education_section;
 
+import education_section.core.StaleElement;
 import education_section.core.WebDriverTestBase;
 import education_section.pages.LoginPage;
 import education_section.pages.NavigationBar;
@@ -18,106 +19,91 @@ import java.util.List;
 
 public class AddNewDataToProfileTest extends WebDriverTestBase {
     @Test
-    public void addCurrentCompanyToProfileTest() throws InterruptedException {
+    public void addCurrentCompanyToProfileTest() {
+        //Innit necessary entities
         LoginPage loginPage = PageFactory.initElements(driver, LoginPage.class);
         NavigationBar navigationBar = PageFactory.initElements(driver, NavigationBar.class);
         ProfilePage profilePage = PageFactory.initElements(driver, ProfilePage.class);
         WorkEducationPage workEducationPage = PageFactory.initElements(driver, WorkEducationPage.class);
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+        StaleElement staleElement = new StaleElement();
 
+        //Navigation to target tab
         loginPage.loginToTestAccount(driver);
-        Thread.sleep(2000);
-
         navigationBar.getProfile();
-
-
         profilePage.getAboutSection();
-
-        Thread.sleep(2000);
-
         profilePage.getWorkEducationSection();
-
         profilePage.getWorkSpace(driver);
 
+        //Create new company and new position
+        workEducationPage.employer_name.sendKeys(profilePage.companyName);
 
-        String companyName = "newCompany";
+        staleElement.refreshAndClick(driver, profilePage.createCompanyBtn_loc);
+        staleElement.refreshAndClick(driver, profilePage.createCompanyBtn_loc);
 
-        workEducationPage.employer_name.sendKeys(companyName);
-        //Thread.sleep(1000);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(profilePage.companyIsCreatedIcon_loc)));
 
-        List<WebElement> companyDropDown = driver.findElements(By.xpath("//*[@class='text']"));
-        for (WebElement element : companyDropDown) {
-            if(element.getText().equals("Create \"newCompany\"")){
-                element.click();
-            }
-        }
+        workEducationPage.position.sendKeys(profilePage.position);
 
-        workEducationPage.position.sendKeys("newEmpoloee");
-        Thread.sleep(1000);
-        List<WebElement> positionDropDown = driver.findElements(By.xpath("//*[@class='text']"));
+        staleElement.refreshAndClick(driver, profilePage.createPositionBtn_loc);
+
+        List<WebElement> positionDropDown = driver.findElements(By.xpath(profilePage.positionDropDown_loc));
         for (WebElement element : positionDropDown) {
-            if(element.getText().equals("Create \"newEmpoloee\"")){
+            if(element.getText().equals(profilePage.textOnCreateBtn)){
                 element.click();
             }
         }
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id(profilePage.positionDropDownArea_loc)));
 
-        workEducationPage.position.sendKeys();
-        Thread.sleep(3000);
+        //Set city
+        workEducationPage.city.sendKeys(profilePage.city);
+        WebElement city = driver.findElement(By.xpath(profilePage.city_loc));
+        city.click();
 
+        workEducationPage.description.sendKeys(profilePage.description);
+        workEducationPage.enableCheckboxCurrentWork(driver);
 
-        workEducationPage.city.sendKeys("Los Angeles, California");
-
-        WebElement el = driver.findElement(By.xpath("//*[@title='Los Angeles, California']"));
-        el.click();
-
-
-        workEducationPage.description.sendKeys("Test public description");
-
-        Thread.sleep(2000);
-
-        workEducationPage.activateCheckboxCurrentWork(driver);
-
+        //Set start date of current position
         Select startDataYear = new Select(driver.findElement(By.name(workEducationPage.startDataYear_loc)));
-        startDataYear.selectByValue("2000");
+        startDataYear.selectByValue(profilePage.year);
 
         Select startDataMonth = new Select(driver.findElement(By.name(workEducationPage.startDataMonth_loc)));
-        startDataMonth.selectByValue("3");
+        startDataMonth.selectByValue(profilePage.mounth);
 
         Select startDataDay = new Select(driver.findElement(By.name(workEducationPage.startDataDay_loc)));
-        startDataDay.selectByValue("11");
+        startDataDay.selectByValue(profilePage.day);
 
-        WebElement share = driver.findElement(By.xpath("//*[@aria-label='Shared with Public']"));
-        share.click();
+        //Opening share filter dropdown
+        staleElement.refreshAndClick(driver, profilePage.shareDrop_loc);
 
-        Thread.sleep(2000);
-        List<WebElement> shareFilter = driver.findElements(By.xpath("//*[@role='menuitemcheckbox']"));
+        //Activating "Friends" filter
+        List<WebElement> shareFilter = driver.findElements(By.xpath(profilePage.shareFilterMenu));
         for (WebElement element : shareFilter) {
-            if(element.getText().equals("Friends")){
+            if(element.getText().equals(profilePage.shareFilterMenuToChoose)){
                 element.click();
             }
         }
-        WebDriverWait wait = new WebDriverWait(driver, 10);
 
-
-        Thread.sleep(7000);
         wait.until(ExpectedConditions.elementToBeClickable(workEducationPage.saveChangesBtn));
         workEducationPage.saveChanges();
 
-        Thread.sleep(10000);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(profilePage.experienceSection_loc)));
 
-
-        //wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("fbRequestsJewelLoadingContent")));
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("fbRequestsJewelLoadingContent")));
-
-        //check
-
+        //Getting all elements on page with employee position name to check added position has been saved
+        List<WebElement> listOfInfoTabs = driver.findElements(By.xpath("//*[@class='fsm fwn fcg']"));
+        boolean addedPositionIsPresent = false;
+        for (WebElement element : listOfInfoTabs) {
+            if(element.getText().contains(profilePage.position)){
+                addedPositionIsPresent = true;
+            }
+        }
+        //Is added position successfully saved
+        Assert.assertTrue(addedPositionIsPresent);
 
         profilePage.getOverviewSection();
 
-        Thread.sleep(2000);
-        WebElement element4 = driver.findElement(By.className("profileLink"));
-        Assert.assertTrue(element4.getText().equals(companyName));
-
-
+        //New added company successfully saved and visible from other(overview) tabs of user profile
+        WebElement companyNameTab = driver.findElement(By.className(profilePage.companyDescriptionFromOverviewTab_loc));
+        Assert.assertTrue(companyNameTab.getText().equals(profilePage.companyName));
     }
-
 }

@@ -33,13 +33,13 @@ public class WorkEducationPage {
     @FindBy(how = How.NAME, using = "__submit__")
     public WebElement saveChangesBtn;
 
+    public String employerName_loc = "//*[@name='employer_name']";
     public String startDataYear_loc = "date_start[year]";
     public String startDataMonth_loc = "date_start[month]";
     public String startDataDay_loc = "date_start[day]";
+    private String filter_loc = "//*[@role='menuitemcheckbox']";
 
-    private String filter = "//*[@role='menuitemcheckbox']";
-
-    public void activateCheckboxCurrentWork(WebDriver driver){
+    public void enableCheckboxCurrentWork(WebDriver driver){
         try {
             WebElement isCurrentActivated = driver.findElement(By.xpath(
                     "//*[@class='uiProgressiveDatepickerRange uiProgressiveDatepickerRangeCurrent']"));
@@ -49,9 +49,10 @@ public class WorkEducationPage {
         }
     }
 
-    public void diactivateCheckboxCurrentWork(WebDriver driver){
+    public void disableCheckboxCurrentWork(WebDriver driver){
         try {
-            WebElement isCurrentActivated = driver.findElement(By.xpath("//*[@class='uiProgressiveDatepickerRange']"));
+            WebElement isCurrentActivated = driver.findElement(By.xpath(
+                    "//*[@class='uiProgressiveDatepickerRange']"));
         }
         catch (Exception e){
             isCurrentCheckbox.click();
@@ -60,7 +61,7 @@ public class WorkEducationPage {
 
     public void choosePublicFilter(WebDriver driver){
         menuItemCheckbox.click();
-        List<WebElement> list = driver.findElements(By.xpath(filter));
+        List<WebElement> list = driver.findElements(By.xpath(filter_loc));
         for (WebElement element : list) {
             if(element.getText().equals("Public")){
                 element.click();
@@ -70,7 +71,7 @@ public class WorkEducationPage {
 
     public void chooseFriendsFilter(WebDriver driver){
         shareFilter.click();
-        List<WebElement> list = driver.findElements(By.xpath(filter));
+        List<WebElement> list = driver.findElements(By.xpath(filter_loc));
         for (WebElement element : list) {
             if(element.getText().equals("Friends")){
                 element.click();
@@ -81,7 +82,7 @@ public class WorkEducationPage {
 
     public void chooseOnlyMeFilter(WebDriver driver){
         menuItemCheckbox.click();
-        List<WebElement> list = driver.findElements(By.xpath(filter));
+        List<WebElement> list = driver.findElements(By.xpath(filter_loc));
         for (WebElement element : list) {
             if(element.getText().equals("Only me")){
                 element.click();

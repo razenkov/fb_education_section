@@ -8,8 +8,8 @@ import org.openqa.selenium.support.How;
 public class LoginPage {
 
     private final String URL = "https://www.facebook.com/";
-    private final String EMAIL = "harold.reimond@gmail.com";
-    private final String PASSWORD = "harold_479";
+    private final String EMAIL = "eva.thomposon@gmail.com";
+    private final String PASSWORD = "e1v2a3t4";
 
     @FindBy(how = How.ID, using = "email")
     private WebElement emailField;

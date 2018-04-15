@@ -1,10 +1,13 @@
 package education_section.pages;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
 
@@ -19,11 +22,40 @@ public class ProfilePage {
     @FindBy(how = How.XPATH, using = "//*[@data-testid='nav_overview']")
     private WebElement overviewTab;
 
-    private String linksToEdit_loc = "clearfix";
+    private String linksToEdit_loc = "//*[@class='_21ok _50f5']";
+    private final int numberOfLinksToWaitFor = 4;
+
     private String workplace = "Add a workplace";
     private String skills = "Add a professional skill";
     private String college = "Add a college";
     private String high_school = "Add a high school";
+
+    public String companyName = "newCompany";
+    public String position = "newEmploee";
+    public String textOnCreateBtn = "Create \"newEmploee\"";
+    public String city = "Los Angeles, California";
+    public String description = "Test public description";
+    public String year = "2000";
+    public String mounth = "3";
+    public String day = "11";
+    public String shareFilterMenuToChoose = "Friends";
+
+    public String createCompanyBtn_loc = "//*[@aria-label='Create \"newCompany\"']";
+    public String createPositionBtn_loc = "//*[@aria-label='Create \"newEmploee\"']";
+    public String positionDropDown_loc = "//*[@class='text']";
+    public String companyIsCreatedIcon_loc = "//*[@class='photo img']";
+    public String positionDropDownArea_loc = "typeahead_list_u_17_c";
+    public String city_loc = "//*[@title='Los Angeles, California']";
+    public String shareDrop_loc = "//*[@aria-label='Shared with Public']";
+   // public String shareDrop_loc = "//*[@id='u_13_a']";
+
+
+    public String shareFilterMenu = "//*[@role='menuitemcheckbox']";
+    public String experienceSection_loc = "//*[@class='_43c8 _5f6p fbEditProfileViewExperience experience _3m4o']";
+    public String companyDescriptionFromOverviewTab_loc = "profileLink";
+
+
+
 
     public void getAboutSection() {
         aboutTab.click();
@@ -37,17 +69,25 @@ public class ProfilePage {
         workEducationTab.click();
     }
 
-    public void getWorkSpace(WebDriver driver) throws InterruptedException {
-        Thread.sleep(2000);
-        List<WebElement> links = driver.findElements(By.className(linksToEdit_loc));
+    public void getWorkSpace(WebDriver driver) {
+
+        new WebDriverWait(driver, 10).until(
+                ExpectedConditions.numberOfElementsToBe(By.xpath(linksToEdit_loc),numberOfLinksToWaitFor));
+
+        List<WebElement> links = driver.findElements(By.xpath(linksToEdit_loc));
+
         for (WebElement element : links) {
             if (element.getText().equals(workplace)) {
-                element.click();
-            }
+                        element.click();
+                    }
         }
     }
 
     public void getSkills(WebDriver driver) {
+
+        new WebDriverWait(driver, 10).until(
+                ExpectedConditions.numberOfElementsToBe(By.xpath(linksToEdit_loc),numberOfLinksToWaitFor));
+
         List<WebElement> links = driver.findElements(By.className(linksToEdit_loc));
         for (WebElement element : links) {
             if (element.getText().equals(skills)) {
@@ -57,6 +97,10 @@ public class ProfilePage {
     }
 
     public void getCollage(WebDriver driver) {
+
+        new WebDriverWait(driver, 10).until(
+                ExpectedConditions.numberOfElementsToBe(By.xpath(linksToEdit_loc),numberOfLinksToWaitFor));
+
         List<WebElement> links = driver.findElements(By.className(linksToEdit_loc));
         for (WebElement element : links) {
             if (element.getText().equals(college)) {
@@ -66,6 +110,10 @@ public class ProfilePage {
     }
 
     public void getHighSchool(WebDriver driver) {
+
+        new WebDriverWait(driver, 10).until(
+                ExpectedConditions.numberOfElementsToBe(By.xpath(linksToEdit_loc),numberOfLinksToWaitFor));
+
         List<WebElement> links = driver.findElements(By.className(linksToEdit_loc));
         for (WebElement element : links) {
             if (element.getText().equals(high_school)) {

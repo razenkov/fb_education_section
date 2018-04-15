@@ -1,11 +1,9 @@
 package education_section.core;
 
-
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
@@ -18,23 +16,20 @@ import java.util.concurrent.TimeUnit;
 public class WebDriverTestBase {
 
     protected WebDriver driver;
-    protected WebDriverManager manager;
+    private WebDriverManager manager;
     private String browser = System.getProperty("browser", "chrome");
 
-    //@Parameters({"platform", "remoteBrowser"})
-
     @BeforeClass
-//    protected void setup(@Optional String platform, @Optional String remoteBrowser) {
     protected void setup() {
 
         switch (browser) {
             case "firefox": {
                 manager.firefoxdriver().setup();
-                //FirefoxOptions options = new FirefoxOptions();
 
+                //To switch off firefox notifications should do this way
                 FirefoxProfile profile = new FirefoxProfile();
                 profile.setPreference("permissions.default.desktop-notification", 1);
-                DesiredCapabilities capabilities=DesiredCapabilities.firefox();
+                DesiredCapabilities capabilities = DesiredCapabilities.firefox();
                 capabilities.setCapability(FirefoxDriver.PROFILE, profile);
                 driver = new FirefoxDriver(capabilities);
                 break;
@@ -44,13 +39,6 @@ public class WebDriverTestBase {
                 ChromeOptions options = new ChromeOptions();
                 options.addArguments("--disable-notifications");
                 driver = new ChromeDriver(options);
-                break;
-            }
-            case "edge": {
-                manager.edgedriver().setup();
-                ChromeOptions options = new ChromeOptions();
-                options.addArguments("--disable-notifications");
-                driver = new EdgeDriver(options);
                 break;
             }
         }
@@ -66,7 +54,7 @@ public class WebDriverTestBase {
 
     @AfterClass
     protected void tearDown() {
-        //driver.quit();
+        driver.quit();
     }
 }
 
